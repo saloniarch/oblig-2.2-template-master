@@ -7,6 +7,7 @@ package no.oslomet.cs.algdat.Oblig2;
 import java.sql.SQLOutput;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 
 
 public class DobbeltLenketListe<T> implements Liste<T> {
@@ -89,8 +90,18 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public boolean leggInn(T verdi) {
-        throw new UnsupportedOperationException();
+        Objects.requireNonNull(null);
+        if (tom()) {
+            hode = hale = new Node<>(verdi);
+            antall = 0;
+
+        } else if (!tom()) {
+            hale = new Node<>();
+        }
+        return true;
     }
+
+
 
     @Override
     public void leggInn(int indeks, T verdi) {
@@ -134,15 +145,25 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public String toString() {
-       StringBuilder ord = new StringBuilder();
+       StringBuilder ord = new StringBuilder("[");
        Node current = hode;
        while(current != null){
-
+           ord.append(current.verdi).append(", ");
+           current = current.neste;
         }
+       ord.append(current.verdi).append("]");
+       return ord.toString();
     }
 
     public String omvendtString() {
-        throw new UnsupportedOperationException();
+        StringBuilder omvendt = new StringBuilder("[");
+        Node current= hale;
+        while (current != null){
+            omvendt.append(current.verdi).append(", ");
+            current = current.forrige;
+        }
+        omvendt.append(current.verdi).append("]");
+        return omvendt.toString();
     }
 
     @Override
