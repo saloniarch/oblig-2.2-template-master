@@ -47,20 +47,28 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         if (a == null) {
             throw new NullPointerException("Tabellen a er null");
         }
+        int j = 0;
+        Node current = hode;
 
-        for (int i = 0; i < a.length; i++){
+        for (int i =0; i < a.length; i++){
+             if(a[i] != null) {
+                 current = new Node(a[i], null, null);
+                 antall ++;
+                 j = i;
+                 break;
+             }
+        }
+        for (int i=j+1; i < a.length; i++){
             if(a[i] != null){
-                Node current = hode;
-                current = current.neste = new Node(a[0], null, null);
-                hale.forrige = new Node(a[a.length-1], null, null);
-                antall ++;
-                endringer ++;
-                System.out.println(current.verdi);
+                current = new Node(a[i], hale, null);
+                current = current.neste;
+                antall++;
             }
         }
-        Liste<String> liste = new DobbeltLenketListe<>();
-        System.out.println(liste.antall() + " " + liste.tom());
+        hale = current;
+
     }
+
 
     public Liste<T> subliste(int fra, int til) {
         throw new UnsupportedOperationException();
@@ -126,7 +134,11 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException();
+       StringBuilder ord = new StringBuilder();
+       Node current = hode;
+       while(current != null){
+
+        }
     }
 
     public String omvendtString() {
