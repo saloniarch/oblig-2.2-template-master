@@ -4,6 +4,7 @@ package no.oslomet.cs.algdat.Oblig2;
 ////////////////// class DobbeltLenketListe //////////////////////////////
 
 
+import java.sql.SQLOutput;
 import java.util.Comparator;
 import java.util.Iterator;
 
@@ -37,11 +38,28 @@ public class DobbeltLenketListe<T> implements Liste<T> {
     private int endringer;         // antall endringer i listen
 
     public DobbeltLenketListe() {
-        throw new UnsupportedOperationException();
+        antall = 0;
+        endringer = 0;
+        hode = hale = null;
     }
 
     public DobbeltLenketListe(T[] a) {
-        throw new UnsupportedOperationException();
+        if (a == null) {
+            throw new NullPointerException("Tabellen a er null");
+        }
+
+        for (int i = 0; i < a.length; i++){
+            if(a[i] != null){
+                Node current = hode;
+                current = current.neste = new Node(a[0], null, null);
+                hale.forrige = new Node(a[a.length-1], null, null);
+                antall ++;
+                endringer ++;
+                System.out.println(current.verdi);
+            }
+        }
+        Liste<String> liste = new DobbeltLenketListe<>();
+        System.out.println(liste.antall() + " " + liste.tom());
     }
 
     public Liste<T> subliste(int fra, int til) {
@@ -50,12 +68,15 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public int antall() {
-        throw new UnsupportedOperationException();
+        return antall;
     }
-
     @Override
     public boolean tom() {
-        throw new UnsupportedOperationException();
+        if (antall == 0){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -157,6 +178,11 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         throw new UnsupportedOperationException();
     }
 
+    public static void main(String[] args) {
+        String[] s = {"Ole", null, "Per", "Kari", null};
+        Liste<String> liste = new DobbeltLenketListe<>(s);
+        System.out.println(liste.antall() + " " + liste.tom());
+    }
 } // class DobbeltLenketListe
 
 
