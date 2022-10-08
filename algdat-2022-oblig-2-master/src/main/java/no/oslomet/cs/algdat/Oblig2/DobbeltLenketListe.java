@@ -91,12 +91,19 @@ public class DobbeltLenketListe<T> implements Liste<T> {
     @Override
     public boolean leggInn(T verdi) {
         Objects.requireNonNull(null);
-        if (tom()) {
+        if (hode == null && hale == null) {
             hode = hale = new Node<>(verdi);
-            antall = 0;
+            antall++;
+            endringer++;
 
-        } else if (!tom()) {
-            hale = new Node<>();
+        } else if (hode != null && hale != null) {
+            Node<T> nyverdi = new Node<>(verdi);
+
+            nyverdi.forrige = hale;
+            hale.neste = nyverdi;
+            hale = nyverdi;
+            antall ++;
+            endringer ++;
         }
         return true;
     }
