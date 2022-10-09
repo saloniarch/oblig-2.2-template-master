@@ -48,12 +48,17 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         if (a == null) {
             throw new NullPointerException("Tabellen a er null");
         }
+        hode = new Node<>(null,null,null);
+        hale = new Node<>(null,null,null);
         int j = 0;
         Node current = hode;
 
         for (int i =0; i < a.length; i++){
              if(a[i] != null) {
                  current = new Node(a[i], null, null);
+                 if (hode.neste == null){
+                     hode.neste = current;
+                 }
                  antall ++;
                  j = i;
                  break;
@@ -66,8 +71,7 @@ public class DobbeltLenketListe<T> implements Liste<T> {
                 antall++;
             }
         }
-        hale = current;
-
+        hale.forrige = current;
     }
 
 
@@ -90,18 +94,20 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public boolean leggInn(T verdi) {
-        Objects.requireNonNull(null);
+        Objects.requireNonNull(verdi);
         if (hode == null && hale == null) {
-            hode = hale = new Node<>(verdi);
+            Node nyNode = new Node(verdi, null, null);
+            hode = new Node<>(null, null, nyNode);
+            hale = new Node<>(null, nyNode, null);
             antall++;
             endringer++;
 
-        } else if (hode != null && hale != null) {
-            Node<T> nyverdi = new Node<>(verdi);
-
-            nyverdi.forrige = hale;
-            hale.neste = nyverdi;
-            hale = nyverdi;
+        } else {
+            Node<T> nyverdi = new Node<>(verdi, null, null);
+            Node forrigeverdi = hale.forrige;
+            forrigeverdi.neste = nyverdi;
+            hale.forrige = nyverdi;
+            nyverdi.forrige = forrigeverdi;
             antall ++;
             endringer ++;
         }
@@ -152,24 +158,38 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public String toString() {
-       StringBuilder ord = new StringBuilder("[");
-       Node current = hode;
-       while(current != null){
-           ord.append(current.verdi).append(", ");
-           current = current.neste;
-        }
-       ord.append(current.verdi).append("]");
-       return ord.toString();
+      StringBuilder ord = new StringBuilder("[");
+      Node current;
+      if (hode != null && hode.neste != null) {
+           current = hode.neste;
+      } else {
+          return "[]";
+      }
+          while (current.neste != null) {
+              ord.append(current.verdi).append(", ");
+              current = current.neste;
+          }
+
+          ord.append(current.verdi).append("]");
+
+
+        return ord.toString();
     }
 
     public String omvendtString() {
         StringBuilder omvendt = new StringBuilder("[");
-        Node current= hale;
-        while (current != null){
+        Node current;
+        if (hale != null && hale.forrige != null) {
+            current = hale.forrige;
+        } else {
+                return "[]";
+            }
+            for (int i = 0; i < antall; i--) {
             omvendt.append(current.verdi).append(", ");
             current = current.forrige;
         }
-        omvendt.append(current.verdi).append("]");
+            omvendt.append(current.verdi).append("]");
+
         return omvendt.toString();
     }
 
