@@ -50,26 +50,22 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         }
         hode = new Node<>(null,null,null);
         hale = new Node<>(null,null,null);
-        int j = 0;
         Node current = hode;
-
+        Node forrige = null;
         for (int i =0; i < a.length; i++){
              if(a[i] != null) {
                  current = new Node(a[i], null, null);
                  if (hode.neste == null){
                      hode.neste = current;
+                 } else {
+                     forrige.neste = current;
+                     current.forrige = forrige;
                  }
-                 antall ++;
-                 j = i;
-                 break;
-             }
+                 forrige = current;
+                 antall++;
+
         }
-        for (int i=j+1; i < a.length; i++){
-            if(a[i] != null){
-                current = new Node(a[i], hale, null);
-                current = current.neste;
-                antall++;
-            }
+
         }
         hale.forrige = current;
     }
@@ -102,16 +98,18 @@ public class DobbeltLenketListe<T> implements Liste<T> {
             antall++;
             endringer++;
 
-        } else {
+            return true;
+
+        } else if(hode !=null && hale != null){
             Node<T> nyverdi = new Node<>(verdi, null, null);
             Node forrigeverdi = hale.forrige;
-            forrigeverdi.neste = nyverdi;
-            hale.forrige = nyverdi;
-            nyverdi.forrige = forrigeverdi;
-            antall ++;
-            endringer ++;
+                forrigeverdi.neste = nyverdi;
+                hale.forrige = nyverdi;
+                nyverdi.forrige = forrigeverdi;
+                antall++;
+                endringer++;
         }
-        return true;
+        return false;
     }
 
 
@@ -126,9 +124,28 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         throw new UnsupportedOperationException();
     }
 
+    public Node<T> finnNode(int indeks){
+        int i = 0;
+        if(indeks < antall/2){
+            Node nesteverdi = hode.neste;
+           while(i < indeks){
+               nesteverdi = nesteverdi.neste;
+               i ++;
+           }
+        } else{
+            Node forrigeverdi = hale.forrige;
+            while(i<indeks){
+                forrigeverdi = forrigeverdi.forrige;
+                i--;
+
+            }
+        }
+        return finnNode(indeks);
+    }
+
     @Override
     public T hent(int indeks) {
-        throw new UnsupportedOperationException();
+
     }
 
     @Override
@@ -170,7 +187,7 @@ public class DobbeltLenketListe<T> implements Liste<T> {
               current = current.neste;
           }
 
-          ord.append(current.verdi).append("]");
+          ord.append(current.verdi + "]");
 
 
         return ord.toString();
@@ -184,7 +201,7 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         } else {
                 return "[]";
             }
-            for (int i = 0; i < antall; i--) {
+            while (current.forrige !=null) {
             omvendt.append(current.verdi).append(", ");
             current = current.forrige;
         }
