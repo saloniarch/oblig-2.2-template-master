@@ -7,6 +7,7 @@ package no.oslomet.cs.algdat.Oblig2;
 import java.sql.SQLOutput;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 
@@ -72,8 +73,27 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
 
     public Liste<T> subliste(int fra, int til) {
-        throw new UnsupportedOperationException();
+
+        fratilKontroll(antall, fra, til);
+        DobbeltLenketListe nyListe = new DobbeltLenketListe();
+        int i;
+        for(i = fra; i < til; i++){
+            nyListe.leggInn(hent(i));
+        }
+        return nyListe;
     }
+    //START KOMPENDIET
+    private static void fratilKontroll(int antall, int fra, int til) {
+        if (fra < 0)                                  // fra er negativ
+            throw new IndexOutOfBoundsException("fra(" + fra + ") er negativ!");
+
+        if (til > antall)                          // til er utenfor tabellen
+            throw new IndexOutOfBoundsException("til(" + til + ") > antall(" + antall + ")");
+
+        if (fra > til)                                // fra er større enn til
+            throw new IllegalArgumentException("fra(" + fra + ") > til(" + til + ") - illegalt intervall!");
+    }
+    //SLUTT KOMPENDIET
 
     @Override
     public int antall() {
@@ -116,47 +136,120 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public void leggInn(int indeks, T verdi) {
-        throw new UnsupportedOperationException();
+        if(indeks < 0 || indeks > antall){
+            throw new IndexOutOfBoundsException("Indeks kan ikke være mindre enn 0 eller større enn antall");
+        } else if( verdi == null){
+            throw new NullPointerException("verdien kan ikke være tom");
+        } else if (antall == 0){
+            hode = new Node<>(null);
+            hale = new Node<>(null);
+            Node node1 = new Node<>(verdi);
+            hale.forrige = node1;
+            hode.neste = node1;
+        } else if(indeks == 0){
+            Node gammelNode = hode.neste;
+            Node nyNode = new Node<>(verdi, null, gammelNode);
+            gammelNode.forrige = nyNode;
+            hode.neste = nyNode;
+        } else if(indeks == antall){
+            Node gammelNode = hale.forrige;
+            Node nyNode = new Node<>(verdi, gammelNode, null);
+            gammelNode.neste = nyNode;
+            hale.forrige = nyNode;
+        } else {
+            Node left = finnNode(indeks-1);
+            Node right = finnNode(indeks);
+            Node nyNode = new Node<>(verdi,left, right);
+            left.neste = nyNode;
+            nyNode.neste = right;
+            right.forrige = nyNode;
+        }
+        antall++;
+        endringer++;
     }
 
     @Override
     public boolean inneholder(T verdi) {
-        throw new UnsupportedOperationException();
+        if(indeksTil(verdi) != -1){
+            return true;
+        } else return false;
     }
 
     public Node<T> finnNode(int indeks){
-        int i = 0;
-        if(indeks < antall/2){
-            Node nesteverdi = hode.neste;
-           while(i < indeks){
-               nesteverdi = nesteverdi.neste;
-               i ++;
-           }
-        } else{
-            Node forrigeverdi = hale.forrige;
-            while(i<indeks){
-                forrigeverdi = forrigeverdi.forrige;
-                i--;
 
+        if(hode== null && hode.neste == null){
+            throw new NoSuchElementException("Hode er null");
+        } else {
+            Node node1;
+
+            if(indeks < antall/2){
+                int i = 0;
+                node1 = hode.neste;
+                while(i < indeks) {
+                    node1 = node1.neste;
+                    i++;
+                }
             }
+            else {
+                int i = antall;
+                node1 = hale;
+                while (i > indeks) {
+                    node1 = node1.forrige;
+                    i--;
+                }
+            }
+            return node1;
         }
-        return finnNode(indeks);
     }
 
     @Override
     public T hent(int indeks) {
-
+        indeksKontroll(indeks, false);
+        return finnNode(indeks).verdi;
     }
 
     @Override
     public int indeksTil(T verdi) {
-        throw new UnsupportedOperationException();
+        int indeks = -1;
+        Node current;
+        if (verdi == null) {
+            return -1;
+        }
+        else {
+            if (hode != null && hode.neste != null) {
+                current = hode;
+            } else {
+                return -1;
+            }
+        }
+        for (int i = indeks; i < antall; i++){
+            if (!(verdi.equals(current.verdi))) {
+                current = current.neste;
+            } else {
+                indeks = i;
+                break;
+            }
+        }
+        return indeks;
     }
 
     @Override
     public T oppdater(int indeks, T nyverdi) {
-        throw new UnsupportedOperationException();
+        if (nyverdi == null){
+            throw new NullPointerException("Verdien er null");
+        } else {
+            indeksKontroll(indeks, false);
+
+            Node gammelNode = finnNode(indeks);
+            T gammelVerdi = (T) gammelNode.verdi;
+            gammelNode.verdi = nyverdi;
+
+
+            endringer++;
+            return (T) gammelVerdi ;
+        }
     }
+
 
     @Override
     public boolean fjern(T verdi) {
