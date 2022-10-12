@@ -177,6 +177,7 @@ public class DobbeltLenketListe<T> implements Liste<T> {
     }
 
     public Node<T> finnNode(int indeks) {
+
         if (hode == null && hode.neste == null) {
             throw new NoSuchElementException("Hode er null");
         } else {
@@ -265,15 +266,15 @@ public class DobbeltLenketListe<T> implements Liste<T> {
     }
 
 
-    private void fjernMetode(int indeks) {
+    private void fjernMetode(Node<T> p) {
         if (antall == 1) {
             hode = hale = null;
 
-        } else if (indeks == antall) {
+        } else if (p == hode) {
             hode = hode.neste;
             hode.forrige = null;
 
-        } else if (indeks == antall-1) {
+        } else if (p == hale) {
             hale = hale.forrige;
             hale.neste = null;
 
@@ -294,7 +295,6 @@ public class DobbeltLenketListe<T> implements Liste<T> {
        fjernMetode(current);
         return temp;
             }
-
 
 
     @Override
