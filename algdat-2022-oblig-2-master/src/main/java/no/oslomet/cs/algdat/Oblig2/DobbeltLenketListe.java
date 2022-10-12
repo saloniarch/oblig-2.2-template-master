@@ -270,18 +270,21 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         if (antall == 1) {
             hode = hale = null;
 
-        } else if (p == hode) {
-            hode = hode.neste;
+        } else if (p == hode.neste) {
+            Node temp = hode.neste.neste;
             hode.forrige = null;
+            hode.neste = temp;
+            temp.forrige = null;
 
-        } else if (p == hale) {
-            hale = hale.forrige;
+        } else if (p == hale.forrige) {
+            Node temp2 = hale.forrige.forrige;
             hale.neste = null;
-
+            hale.forrige = temp2;
+            temp2.neste = null;
         }  else {
 
-           p.forrige.neste = p.neste;
-           p.neste.forrige = p.forrige;
+          p.forrige.neste = p.neste;
+          p.neste.forrige = p.forrige;
         }
         antall--;
         endringer++;
