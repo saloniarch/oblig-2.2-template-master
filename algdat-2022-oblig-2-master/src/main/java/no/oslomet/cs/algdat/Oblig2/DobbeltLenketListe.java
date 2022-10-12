@@ -380,12 +380,7 @@ public class DobbeltLenketListe<T> implements Liste<T> {
         }
 
         private DobbeltLenketListeIterator(int indeks) {
-            denne = hode;
-            int i = 0;
-            while (i < indeks) {
-                denne = denne.neste;
-                i++;
-            }
+            denne = finnNode(indeks);
             fjernOK = false;
             iteratorendringer = endringer;
         }
