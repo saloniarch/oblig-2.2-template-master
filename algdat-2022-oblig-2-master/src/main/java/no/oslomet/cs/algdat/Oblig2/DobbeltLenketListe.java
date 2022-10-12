@@ -308,17 +308,7 @@ public class DobbeltLenketListe<T> implements Liste<T> {
 
     @Override
     public void nullstill() {
-        if (hode == null && hode.neste != null) throw new NoSuchElementException("Hode er ikke definert :(");
-        Node current = hode.neste;
-        hode.neste = null;
-        while (current.neste != null) {
-            current.forrige = null;
-            current = current.neste;
-            current.forrige.neste = null;
-        }
-        endringer++;
-        antall = 0;
-        hale.forrige = null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -396,9 +386,9 @@ public class DobbeltLenketListe<T> implements Liste<T> {
                 if (!hasNext()) throw new NoSuchElementException();
                 if (denne.verdi == null) denne = denne.neste;
                 fjernOK = true;
-                Node forrige = denne;
+                Node forDenne = denne;
                 denne = denne.neste;
-                return (T) forrige.verdi;
+                return (T) forDenne.verdi;
         }
 
     @Override

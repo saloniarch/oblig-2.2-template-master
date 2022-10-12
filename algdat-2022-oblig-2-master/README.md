@@ -52,4 +52,9 @@ så skal det bli fjernet fra mellom to noder.
 Antall er mindre siden vi holder på å fjerne, mens endringer øker siden lista blir endret.
 Da kan vi kalle denne private metoden både på fjern indeksen og fjern verdien.
 
-I oppgave 8
+I oppgave 8 lagde jeg flere metoder. Det er en denne peker som peker til en node og next metoden 
+flytter den til neste node dersom den finnes. Det returnerer også verdien til forrige noden. Next metoden sjekker først om iteratorendringer ikke er null endring
+og hasNext ikke finnes da kaster det en feilmelding . Hvis denne.verdi er lik null da peker den til denne.neste, dette gjorde jeg
+for å unngå en feil jeg fikk før jeg implementerte den if setningen. Da lager jeg en førDenne Node som holder denne slik at jeg henter verdien senere.
+Og da peker denne til denne.neste. Metoden skal da returnere verdien til førDenne. Jeg måtte låne oppgave 7 midlertidig fra en kamerat for å sjekke om oppgave 8 kjørte riktig, siden oppgave 7 ikke var en del av oppgavene
+jeg skulle gjøre.
